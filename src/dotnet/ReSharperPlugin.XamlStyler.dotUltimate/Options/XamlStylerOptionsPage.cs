@@ -44,7 +44,7 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             
             // Indentation
             AddHeader("Indentation");
-            var indentSizeOption = AddSpinner((XamlStylerSettings x) => x.IndentSize, "Indent size");
+            var indentSizeOption = AddSpinner((XamlStylerSettings x) => x.IndentSize, "Indent size:");
             using (Indent())
             {
                 AddBoolOption((XamlStylerSettings x) => x.UseIdeIndentSize, "Use IDE value");
@@ -66,13 +66,13 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             
             // Attribute formatting
             AddHeader("Attribute formatting");
-            AddSpinner((XamlStylerSettings x) => x.AttributesTolerance, "Attribute tolerance");
+            AddSpinner((XamlStylerSettings x) => x.AttributesTolerance, "Attribute tolerance:");
             AddBoolOption((XamlStylerSettings x) => x.KeepFirstAttributeOnSameLine, "Keep first attribute on same line");
-            AddSpinner((XamlStylerSettings x) => x.MaxAttributeCharactersPerLine, "Max attribute characters per line");
-            AddSpinner((XamlStylerSettings x) => x.MaxAttributesPerLine, "Max attributes per line");
-            AddTextBox((XamlStylerSettings x) => x.NoNewLineElements, "Newline exemption elements");
+            AddSpinner((XamlStylerSettings x) => x.MaxAttributeCharactersPerLine, "Max attribute characters per line:");
+            AddSpinner((XamlStylerSettings x) => x.MaxAttributesPerLine, "Max attributes per line:");
+            AddTextBox((XamlStylerSettings x) => x.NoNewLineElements, "Newline exemption elements:");
             AddBoolOption((XamlStylerSettings x) => x.PutAttributeOrderRuleGroupsOnSeparateLines, "Separate by groups");
-            AddSpinner((XamlStylerSettings x) => x.AttributeIndentation, "Attribute indentation");
+            AddSpinner((XamlStylerSettings x) => x.AttributeIndentation, "Attribute indentation:");
             AddComboEnum((XamlStylerSettings x) => x.AttributeIndentationStyle, "Attribute indentation style");
             AddBoolOption((XamlStylerSettings x) => x.RemoveDesignTimeReferences, "Remove design-time references");
             
@@ -82,7 +82,7 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
 
             var attributeOrderingRuleGroupsOption = AddListControl((XamlStylerSettings x) => x.AttributeOrderingRuleGroups, new StylerOptions().AttributeOrderingRuleGroups, "Attribute ordering rule groups");
             
-            var firstLineAttributesOption = AddTextBox((XamlStylerSettings x) => x.FirstLineAttributes, "First-line attributes");
+            var firstLineAttributesOption = AddTextBox((XamlStylerSettings x) => x.FirstLineAttributes, "First-line attributes:");
             var orderAttributesByNameOption = AddBoolOption((XamlStylerSettings x) => x.OrderAttributesByName, "Order attributes by name");
             
             AddBinding(attributeOrderingRuleGroupsOption, BindingStyle.IsEnabledProperty,
@@ -114,7 +114,7 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             // Markup extension
             AddHeader("Markup extension");
             AddBoolOption((XamlStylerSettings x) => x.FormatMarkupExtension, "Enable markup extension formatting");
-            var noNewLineMarkupExtensionsOption = AddTextBox((XamlStylerSettings x) => x.NoNewLineMarkupExtensions, "Keep markup extensions of these types on one line");
+            var noNewLineMarkupExtensionsOption = AddTextBox((XamlStylerSettings x) => x.NoNewLineMarkupExtensions, "Keep markup extensions of these types on one line:");
             
             AddBinding(noNewLineMarkupExtensionsOption, BindingStyle.IsEnabledProperty,
                 (XamlStylerSettings x) => x.FormatMarkupExtension,
@@ -123,13 +123,13 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             // Thickness formatting
             AddHeader("Thickness formatting");
             AddComboEnum((XamlStylerSettings x) => x.ThicknessStyle, "Thickness separator");
-            AddTextBox((XamlStylerSettings x) => x.ThicknessAttributes, "Thickness attributes");
+            AddTextBox((XamlStylerSettings x) => x.ThicknessAttributes, "Thickness attributes:");
 
             // Misc
             AddHeader("Misc");
             AddBoolOption((XamlStylerSettings x) => x.FormatOnSave, "Format XAML on save");
             AddBoolOption((XamlStylerSettings x) => x.SaveAndCloseOnFormat, "Automatically save and close documents opened by XAML Styler");
-            AddSpinner((XamlStylerSettings x) => x.CommentSpaces, "Comment padding");
+            AddSpinner((XamlStylerSettings x) => x.CommentSpaces, "Comment padding:");
             
             // Configuration
             AddHeader("Configuration");
@@ -187,13 +187,7 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             var property = new Property<string>(description);
             OptionsSettingsSmartContext.SetBinding(_lifetime, lambdaExpression, property);
             var control = property.GetBeTextBox(_lifetime);
-            //AddControl(control.WithDescription(description, _lifetime, size: BeSizingType.Fit));
-            
-            var grid = BeControls.GetGrid();
-            var label = description.GetBeLabel();
-            grid.AddElement(label);
-            grid.AddElement(control);
-            AddKeyword(description);
+            AddControl(control.WithDescription(description, _lifetime, size: BeSizingType.Fill));
             
             return control;
         }
@@ -205,11 +199,6 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             OptionsSettingsSmartContext.SetBinding(_lifetime, lambdaExpression, property);
             var control = property.GetBeSpinner(_lifetime, min, max);
             AddControl(control.WithDescription(description, _lifetime, size: BeSizingType.Fit));
-            
-            var span = BeControls.GetSpanGrid("auto,*")
-                .AddAutoColumnElementsToNewRow(BeSizingType.Fit, false, description.GetBeLabelWithShortCut(_lifetime), control);
-            AddControl(span);
-            AddKeyword(description);
             
             return control;
         }
