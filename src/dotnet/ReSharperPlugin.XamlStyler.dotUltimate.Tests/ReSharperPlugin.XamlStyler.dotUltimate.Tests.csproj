@@ -6,15 +6,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="$(SdkVersion)"/>
+        <PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="$(SdkVersion)" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ReSharperPlugin.XamlStyler.dotUltimate\ReSharperPlugin.XamlStyler.dotUltimate.csproj"/>
+        <ProjectReference Include="..\ReSharperPlugin.XamlStyler.dotUltimate\ReSharperPlugin.XamlStyler.dotUltimate.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="test/**/*"/>
+        <Compile Remove="test/**/*" />
     </ItemGroup>
 
 </Project>
