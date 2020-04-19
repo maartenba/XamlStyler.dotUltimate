@@ -1,8 +1,11 @@
 using System;
 using JetBrains.Annotations;
 using JetBrains.Application.Progress;
+using JetBrains.Application.Settings;
 using JetBrains.DocumentModel.Impl;
+using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
+using JetBrains.ProjectModel.DataContext;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.Xaml.Bulbs;
 using JetBrains.ReSharper.Psi;
@@ -11,7 +14,6 @@ using JetBrains.ReSharper.Psi.Xaml;
 using JetBrains.TextControl;
 using JetBrains.Util;
 using Xavalon.XamlStyler.Core;
-using Xavalon.XamlStyler.Core.Options;
 
 namespace ReSharperPlugin.XamlStyler.dotUltimate
 {
@@ -36,7 +38,13 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
 
         protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
-            var styler = new StylerService(new StylerOptions());
+            // Fetch settings
+            var lifetime = solution.GetLifetime();
+            var settings = solution.GetSettingsStore().SettingsStore.BindToContextLive(lifetime, ContextRange.Smart(solution.ToDataContext()));
+            var stylerOptions = StylerOptionsFactory.FromSettings(settings);
+            
+            // Perform styling
+            var styler = new StylerService(stylerOptions);
             
             foreach (var prjItem in _dataProvider.Document.GetPsiSourceFiles(solution))
             {

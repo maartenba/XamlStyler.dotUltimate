@@ -13,7 +13,7 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
     {
         #region Indentation
 
-        [SettingsEntry(DefaultValue: -1, Description: "Indent size")]
+        [SettingsEntry(DefaultValue: 4, Description: "Indent size")]
         public int IndentSize { get; set; }
 
         [SettingsEntry(DefaultValue: true, Description: "Use IDE value")]

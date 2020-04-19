@@ -10,6 +10,7 @@ using JetBrains.Application.UI.Options.OptionsDialog;
 using JetBrains.Application.UI.Options.OptionsDialog.SimpleOptions;
 using JetBrains.DataFlow;
 using JetBrains.IDE.UI.Extensions;
+using JetBrains.IDE.UI.Extensions.Properties;
 using JetBrains.IDE.UI.Options;
 using JetBrains.Lifetimes;
 using JetBrains.ReSharper.Feature.Services.Daemon.OptionPages;
@@ -27,7 +28,7 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
         private const string PageTitle = "XAML Styler";
 
         private readonly Lifetime _lifetime;
-
+        
         public XamlStylerOptionsPage(
             Lifetime lifetime,
             OptionsPageContext optionsPageContext,
@@ -36,7 +37,7 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             : base(lifetime, optionsPageContext, optionsSettingsSmartContext)
         {
             _lifetime = lifetime;
-
+            
             // Indentation
             AddHeader("Indentation");
             var indentSizeOption = AddSpinner((XamlStylerSettings x) => x.IndentSize, "Indent size");
@@ -47,7 +48,7 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             
             AddBinding(indentSizeOption, BindingStyle.IsEnabledProperty,
                 (XamlStylerSettings x) => x.UseIdeIndentSize,
-                x => (bool)x);
+                x => !(bool)x);
             
             var indentWithTabsOption = AddBoolOption((XamlStylerSettings x) => x.IndentWithTabs, "Indent with tabs");
             using (Indent())
@@ -57,7 +58,7 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             
             AddBinding(indentWithTabsOption, BindingStyle.IsEnabledProperty,
                 (XamlStylerSettings x) => x.UseIdeIndentWithTabs,
-                x => (bool)x);
+                x => !(bool)x);
             
             // Attribute formatting
             AddHeader("Attribute formatting");
@@ -156,7 +157,12 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             var property = new Property<string>(description);
             OptionsSettingsSmartContext.SetBinding(_lifetime, lambdaExpression, property);
             var control = property.GetBeTextBox(_lifetime);
-            AddControl(control.WithDescription(description, _lifetime, size: BeSizingType.Fit));
+            //AddControl(control.WithDescription(description, _lifetime, size: BeSizingType.Fit));
+            
+            var span = BeControls.GetSpanGrid("300,auto")
+                .AddColumnElementsToNewRow(BeSizingType.Fit, false, (description + ":").GetBeLabelWithShortCut(_lifetime), control);
+            AddControl(span);
+            
             return control;
         }
         
@@ -166,7 +172,12 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             var property = new Property<int>(description);
             OptionsSettingsSmartContext.SetBinding(_lifetime, lambdaExpression, property);
             var control = property.GetBeSpinner(_lifetime, min, max);
-            AddControl(control.WithDescription(description, _lifetime, size: BeSizingType.Fit));
+            //AddControl(control.WithDescription(description, _lifetime, size: BeSizingType.Fit));
+            
+            var span = BeControls.GetSpanGrid("300,200")
+                .AddColumnElementsToNewRow(BeSizingType.Fit, false, (description + ":").GetBeLabelWithShortCut(_lifetime), control);
+            AddControl(span);
+            
             return control;
         }
     }
