@@ -4,7 +4,7 @@
         <LanguageTargets>$(MSBuildToolsPath)\Microsoft.CSharp.targets</LanguageTargets>
     </PropertyGroup>
 
-    <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk"/>
+    <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
     <PropertyGroup>
         <TargetFramework>net461</TargetFramework>
@@ -18,19 +18,26 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <!-- TODO: https://github.com/NuGet/Home/issues/7154 -->
-        <PackageReference Include="Wave" Version="$(WaveVersion)"/>
+        <PackageReference Include="Wave" Version="$(WaveVersion)" />
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="Rider\**\*"/>
-        <None Remove="Rider\**\*"/>
-        <EmbeddedResource Remove="Rider\**\*"/>
-        <Content Remove="Rider\**\*"/>
+        <ProjectReference Include="..\XamlStyler\XamlStyler.Core\XamlStyler.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="bin\$(AssemblyName)\$(Configuration)\$(AssemblyName).dll" PackagePath="dotFiles" Pack="true"/>
-        <Content Include="bin\$(AssemblyName)\$(Configuration)\$(AssemblyName).pdb" PackagePath="dotFiles" Pack="true"/>
+        <Compile Remove="Rider\**\*" />
+        <None Remove="Rider\**\*" />
+        <EmbeddedResource Remove="Rider\**\*" />
+        <Content Remove="Rider\**\*" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="bin\$(AssemblyName)\$(Configuration)\$(AssemblyName).dll" PackagePath="dotFiles" Pack="true" />
+        <Content Include="bin\$(AssemblyName)\$(Configuration)\$(AssemblyName).pdb" PackagePath="dotFiles" Pack="true" />
+        <Content Include="bin\$(AssemblyName)\$(Configuration)\XamlStyler.Core.dll" PackagePath="dotFiles" Pack="true" />
+        <Content Include="bin\$(AssemblyName)\$(Configuration)\XamlStyler.Core.pdb" PackagePath="dotFiles" Pack="true" />
+        <Content Include="bin\$(AssemblyName)\$(Configuration)\Irony.dll" PackagePath="dotFiles" Pack="true" />
     </ItemGroup>
 
     <!-- TODO: uncomment for xaml icons -->
@@ -57,6 +64,6 @@
     <!--</ThemedIconsXamlV3>-->
     <!--</ItemGroup>-->
 
-    <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk"/>
+    <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
 </Project>

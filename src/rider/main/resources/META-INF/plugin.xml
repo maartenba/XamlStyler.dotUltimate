@@ -13,12 +13,16 @@
   </description>
 
   <extensions defaultExtensionNs="com.intellij">
-    <applicationConfigurable groupId="language" instance="com.jetbrains.rider.plugins.xamlstyler.dotultimate.SampleOptionsPage" id="SampleOptionsPage" />
+    <applicationConfigurable id="XamlStylerOptionsPage"
+                             groupId="tools"
+                             instance="xavalon.plugins.xamlstyler.dotultimate.XamlStylerOptionsPage" />
   </extensions>
 
   <actions>
-    <action id="SampleAction" class="com.jetbrains.rider.plugins.xamlstyler.dotultimate.SampleAction"
-            text="Do Something" description="Do Something Description">
+    <action id="XamlStyler.Reformat"
+            text="Format with XAML Styler"
+            description="Formats the document(s) using XAML Styler."
+            class="xavalon.plugins.xamlstyler.dotultimate.XamlStylerReformatContextAction">
     </action>
   </actions>
   

@@ -133,7 +133,10 @@ prepareSandbox {
     def outputFolder = "${rootDir}/src/dotnet/${DotnetPluginId}/bin/${DotnetPluginId}.Rider/${BuildConfiguration}"
     def dllFiles = [
             "$outputFolder/${DotnetPluginId}.dll",
-            "$outputFolder/${DotnetPluginId}.pdb"
+            "$outputFolder/${DotnetPluginId}.pdb",
+            "$outputFolder/XamlStyler.Core.dll",
+            "$outputFolder/XamlStyler.Core.pdb",
+            "$outputFolder/Irony.dll"
     ]
 
     dllFiles.forEach({ f ->

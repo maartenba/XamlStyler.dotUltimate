@@ -7,7 +7,7 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
         typeof(EnvironmentSettings),
 //        typeof(CodeEditingSettings),
         "Settings for XamlStyler.dotUltimate")]
-    public class SampleSettings
+    public class XamlStylerSettings
     {
         [SettingsEntry(DefaultValue: "<default>", Description: "Sample Description")]
         public string SampleText;

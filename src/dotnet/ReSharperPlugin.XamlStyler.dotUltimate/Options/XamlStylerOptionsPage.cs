@@ -13,20 +13,16 @@ using JetBrains.Rider.Model.UIAutomation;
 
 namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
 {
-    [OptionsPage(Id, PageTitle, typeof(OptionsThemedIcons.EnvironmentGeneral),
-        ParentId = CodeInspectionPage.PID
-//        NestingType = OptionPageNestingType.Inline,
-//        IsAlignedWithParent = true,
-//        Sequence = 0.1d
+    [OptionsPage(Id, PageTitle, typeof(OptionsThemedIcons.EnvironmentGeneral), ParentId = "Tools"
     )]
-    public class SampleOptionsPage : BeSimpleOptionsPage
+    public class XamlStylerOptionsPage : BeSimpleOptionsPage
     {
-        private const string Id = nameof(SampleOptionsPage);
-        private const string PageTitle = "Sample Options";
+        private const string Id = nameof(XamlStylerOptionsPage);
+        private const string PageTitle = "XAML Styler";
 
         private readonly Lifetime _lifetime;
 
-        public SampleOptionsPage(
+        public XamlStylerOptionsPage(
             Lifetime lifetime,
             OptionsPageContext optionsPageContext,
             OptionsSettingsSmartContext optionsSettingsSmartContext)
@@ -35,7 +31,7 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             _lifetime = lifetime;
 
             AddHeader("Sample header");
-            AddTextBox((SampleSettings x) => x.SampleText, "Description");
+            AddTextBox((XamlStylerSettings x) => x.SampleText, "Description");
         }
 
         private BeTextBox AddTextBox<TKeyClass>(Expression<Func<TKeyClass, string>> lambdaExpression,

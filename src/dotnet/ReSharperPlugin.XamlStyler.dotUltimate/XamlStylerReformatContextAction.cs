@@ -1,45 +1,57 @@
 using System;
-using System.Linq;
+using JetBrains.Annotations;
 using JetBrains.Application.Progress;
+using JetBrains.DocumentModel.Impl;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
-using JetBrains.ReSharper.Feature.Services.Refactorings.Specific.Rename;
 using JetBrains.ReSharper.Feature.Services.Xaml.Bulbs;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Files;
+using JetBrains.ReSharper.Psi.Xaml;
 using JetBrains.TextControl;
 using JetBrains.Util;
+using Xavalon.XamlStyler.Core;
+using Xavalon.XamlStyler.Core.Options;
 
 namespace ReSharperPlugin.XamlStyler.dotUltimate
 {
-    [ContextAction(Name = "XamlStyler.Reformat", Description = "Format XAML", Group = "XAML", Disabled = false, Priority = 1)]
+    [ContextAction(
+        Name = "XamlStyler.Reformat",
+        Description = "Formats the document(s) using XAML Styler.",
+        Group = CommonContextActions.GroupID,
+        Disabled = false,
+        Priority = 100)]
     public class XamlStylerReformatContextAction : ContextActionBase
     {
-        private readonly IVariableDeclaration _nodeUnderCaret;
- 
-        public XamlStylerReformatContextAction(XamlContextActionDataProvider dataProvider)
+        [NotNull] private readonly XamlContextActionDataProvider _dataProvider;
+
+        public XamlStylerReformatContextAction([NotNull] XamlContextActionDataProvider dataProvider)
         {
-            _nodeUnderCaret = dataProvider.GetSelectedElement<IVariableDeclaration>();
+            _dataProvider = dataProvider;
         }
  
- 
+        public override string Text => "Format with XAML Styler";
+        
+        public override bool IsAvailable(IUserDataHolder cache) => _dataProvider.Document != null;
+
         protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
-            return textControl =>
+            var styler = new StylerService(new StylerOptions());
+            
+            foreach (var prjItem in _dataProvider.Document.GetPsiSourceFiles(solution))
             {
-                var newText = _nodeUnderCaret.DeclaredName.ToLower();
-                RenameRefactoringService.Rename(solution,
-                    new RenameDataProvider((IDeclaredElement) _nodeUnderCaret, newText), textControl);
-            };
-        }
- 
-        public override string Text => "Convert to lowercase";
- 
-        public override bool IsAvailable(IUserDataHolder cache)
-        {
-            var nodeText = _nodeUnderCaret?.DeclaredName;
-            var containsUpperCase = nodeText != null && nodeText.Any(char.IsUpper);
-            return containsUpperCase;
+                foreach (var file in prjItem.GetPsiFiles<XamlLanguage>())
+                {
+                    var sourceFile = file.GetSourceFile();
+                    if (sourceFile?.Document != null)
+                    {
+                        sourceFile.Document.SetText(
+                            styler.StyleDocument(sourceFile.Document.GetText()).Replace("\r\n", "\n"));
+                    }
+                }
+            }
+            
+            return null;
         }
     }
 }
