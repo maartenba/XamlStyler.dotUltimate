@@ -1,6 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
 using JetBrains.Application.Settings;
-using JetBrains.Application.Settings.WellKnownRootKeys;
 using JetBrains.ReSharper.Resources.Settings;
 using JetBrains.Util;
 using Xavalon.XamlStyler.Core.DocumentManipulation;
@@ -65,24 +63,8 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
         [SettingsEntry(DefaultValue: true, Description: "Defines whether attributes should be reordered. If false, attributes will not be reordered in any way.\nDefault Value: true")]
         public bool EnableAttributeReordering { get; set; }
 
-        [SettingsEntry(
-            DefaultValue: new[]
-            {
-                "x:Class",
-                "xmlns, xmlns:x",
-                "xmlns:*",
-                "x:Key, Key, x:Name, Name, x:Uid, Uid, Title",
-                "Grid.Row, Grid.RowSpan, Grid.Column, Grid.ColumnSpan, Canvas.Left, Canvas.Top, Canvas.Right, Canvas.Bottom",
-                "Width, Height, MinWidth, MinHeight, MaxWidth, MaxHeight",
-                "Margin, Padding, HorizontalAlignment, VerticalAlignment, HorizontalContentAlignment, VerticalContentAlignment, Panel.ZIndex",
-                "*:*, *",
-                "PageSource, PageIndex, Offset, Color, TargetName, Property, Value, StartPoint, EndPoint",
-                "mc:Ignorable, d:IsDataSource, d:LayoutOverrides, d:IsStaticText",
-                //Storyboards, fixes #30
-                "Storyboard.*, From, To, Duration",
-            }, 
-            Description: "Defines attribute ordering rule groups. Each string element is one group. Use ',' as a delimiter between attributes. 'DOS' wildcards are allowed. XAML Styler will order attributes in groups from top to bottom, and within groups left to right.")]
-        public string[] AttributeOrderingRuleGroups { get; set; }
+        [SettingsEntry(DefaultValue: "", Description: "Defines attribute ordering rule groups. Each string element is one group. Use ',' as a delimiter between attributes. 'DOS' wildcards are allowed. XAML Styler will order attributes in groups from top to bottom, and within groups left to right.")]
+        public string AttributeOrderingRuleGroups { get; set; }
 
         [SettingsEntry(DefaultValue: "", Description: "Defines a list of attributes which should always appear on the same line as the element's start tag. Attribute reordering must be enabled for this setting to take effect.\nDefault Value: None")]
         public string FirstLineAttributes { get; set; }
@@ -161,15 +143,11 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
 
         #region Configuration
 
-        // TODO MAARTEN WATCHER
         [SettingsEntry(DefaultValue: false, Description: "Defines location of external XAML Styler configuration file. Specifying an external configuration file allows you to easily point multiple instances to a shared configuration. The configuration path can be local or network-based. Invalid configurations will be ignored.\nDefault Value: N/A")]
         public FileSystemPath ConfigPath { get; set; }
 
         [SettingsEntry(DefaultValue: false, Description: "When set to true, XAML Styler will look for an external XAML Styler configuration file not only up through your solution directory, but up through the drives root of the current solution so you can share one configuration file through multiple solutions.\nDefault Value: false")]
         public bool SearchToDriveRoot { get; set; }
-
-        [SettingsEntry(DefaultValue: false, Description: "When set to true, all XAML Styler settings will be reset to their defaults.\nDefault Value: false")]
-        public bool ResetToDefault { get; set; }
         
         [SettingsEntry(DefaultValue: false, Description: "Suppress processing\nDefault Value: false")]
         public bool SuppressProcessing { get; set; }

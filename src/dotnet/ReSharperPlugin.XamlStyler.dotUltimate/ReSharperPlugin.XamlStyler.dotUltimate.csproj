@@ -40,6 +40,10 @@
         <Content Include="bin\$(AssemblyName)\$(Configuration)\Irony.dll" PackagePath="dotFiles" Pack="true" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="PresentationCore" />
+    </ItemGroup>
+
     <!-- TODO: uncomment for xaml icons -->
     <!--<ItemGroup>-->
     <!--<Reference Include="System.Xaml" />-->

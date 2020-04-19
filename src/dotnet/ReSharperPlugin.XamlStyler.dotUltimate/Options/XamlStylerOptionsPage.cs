@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
@@ -9,15 +10,15 @@ using JetBrains.Application.UI.Options.Options.ThemedIcons;
 using JetBrains.Application.UI.Options.OptionsDialog;
 using JetBrains.Application.UI.Options.OptionsDialog.SimpleOptions;
 using JetBrains.DataFlow;
+using JetBrains.IDE.UI;
 using JetBrains.IDE.UI.Extensions;
 using JetBrains.IDE.UI.Extensions.Properties;
+using JetBrains.IDE.UI.Extensions.Validation;
 using JetBrains.IDE.UI.Options;
 using JetBrains.Lifetimes;
-using JetBrains.ReSharper.Feature.Services.Daemon.OptionPages;
-using JetBrains.ReSharper.Feature.Services.InlayHints;
-using JetBrains.ReSharper.Feature.Services.ParameterNameHints;
 using JetBrains.Rider.Model.UIAutomation;
 using JetBrains.Util;
+using Xavalon.XamlStyler.Core.Options;
 
 namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
 {
@@ -28,15 +29,18 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
         private const string PageTitle = "XAML Styler";
 
         private readonly Lifetime _lifetime;
+        private readonly IconHostBase _iconHost;
         
         public XamlStylerOptionsPage(
             Lifetime lifetime,
             OptionsPageContext optionsPageContext,
             OptionsSettingsSmartContext optionsSettingsSmartContext,
+            [NotNull] IconHostBase iconHost,
             [NotNull] ICommonFileDialogs commonFileDialogs)
             : base(lifetime, optionsPageContext, optionsSettingsSmartContext)
         {
             _lifetime = lifetime;
+            _iconHost = iconHost;
             
             // Indentation
             AddHeader("Indentation");
@@ -76,27 +80,14 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             AddHeader("Attribute reordering");
             AddBoolOption((XamlStylerSettings x) => x.EnableAttributeReordering, "Enable attribute reordering");
 
-            // [SettingsEntry(
-            //     DefaultValue: new[]
-            //     {
-            //         "x:Class",
-            //         "xmlns, xmlns:x",
-            //         "xmlns:*",
-            //         "x:Key, Key, x:Name, Name, x:Uid, Uid, Title",
-            //         "Grid.Row, Grid.RowSpan, Grid.Column, Grid.ColumnSpan, Canvas.Left, Canvas.Top, Canvas.Right, Canvas.Bottom",
-            //         "Width, Height, MinWidth, MinHeight, MaxWidth, MaxHeight",
-            //         "Margin, Padding, HorizontalAlignment, VerticalAlignment, HorizontalContentAlignment, VerticalContentAlignment, Panel.ZIndex",
-            //         "*:*, *",
-            //         "PageSource, PageIndex, Offset, Color, TargetName, Property, Value, StartPoint, EndPoint",
-            //         "mc:Ignorable, d:IsDataSource, d:LayoutOverrides, d:IsStaticText",
-            //         //Storyboards, fixes #30
-            //         "Storyboard.*, From, To, Duration",
-            //     }, 
-            //     Description: "Defines attribute ordering rule groups. Each string element is one group. Use ',' as a delimiter between attributes. 'DOS' wildcards are allowed. XAML Styler will order attributes in groups from top to bottom, and within groups left to right.")]
-            // public string[] AttributeOrderingRuleGroups { get; set; }
-
+            var attributeOrderingRuleGroupsOption = AddListControl((XamlStylerSettings x) => x.AttributeOrderingRuleGroups, new StylerOptions().AttributeOrderingRuleGroups, "Attribute ordering rule groups");
+            
             var firstLineAttributesOption = AddTextBox((XamlStylerSettings x) => x.FirstLineAttributes, "First-line attributes");
             var orderAttributesByNameOption = AddBoolOption((XamlStylerSettings x) => x.OrderAttributesByName, "Order attributes by name");
+            
+            AddBinding(attributeOrderingRuleGroupsOption, BindingStyle.IsEnabledProperty,
+                (XamlStylerSettings x) => x.EnableAttributeReordering,
+                x => (bool)x);
             
             AddBinding(firstLineAttributesOption, BindingStyle.IsEnabledProperty,
                 (XamlStylerSettings x) => x.EnableAttributeReordering,
@@ -147,8 +138,47 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             OptionsSettingsSmartContext.SetBinding(lifetime, (XamlStylerSettings k) => k.ConfigPath, configPath);
             AddFileChooserOption(configPath, "External configuration file", FileSystemPath.Empty, null, commonFileDialogs, null, false, "", null, null, null, null);
             AddBoolOption((XamlStylerSettings x) => x.SearchToDriveRoot, "Search to drive root");
-            AddBoolOption((XamlStylerSettings x) => x.ResetToDefault, "Reset to default");
             AddBoolOption((XamlStylerSettings x) => x.SuppressProcessing, "Suppress processing");
+
+            AddButton("Reset to defaults", () =>
+            {
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.IndentSize);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.UseIdeIndentSize);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.IndentWithTabs);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.UseIdeIndentWithTabs);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.AttributesTolerance);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.KeepFirstAttributeOnSameLine);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.MaxAttributeCharactersPerLine);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.MaxAttributeCharactersPerLine);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.MaxAttributesPerLine);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.NoNewLineElements);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.PutAttributeOrderRuleGroupsOnSeparateLines);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.AttributeIndentation);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.AttributeIndentationStyle);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.RemoveDesignTimeReferences);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.EnableAttributeReordering);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.AttributeOrderingRuleGroups);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.FirstLineAttributes);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.OrderAttributesByName);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.PutEndingBracketOnNewLine);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.RemoveEndingTagOfEmptyElement);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.SpaceBeforeClosingSlash);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.RootElementLineBreakRule);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.ReorderVSM);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.ReorderGridChildren);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.ReorderCanvasChildren);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.ReorderSetters);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.FormatMarkupExtension);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.NoNewLineMarkupExtensions);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.ThicknessStyle);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.ThicknessAttributes);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.FormatOnSave);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.SaveAndCloseOnFormat);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.CommentSpaces);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.ConfigPath);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.SearchToDriveRoot);
+                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.SuppressProcessing);
+            });
         }
 
         private BeTextBox AddTextBox<TKeyClass>(Expression<Func<TKeyClass, string>> lambdaExpression,
@@ -159,9 +189,11 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             var control = property.GetBeTextBox(_lifetime);
             //AddControl(control.WithDescription(description, _lifetime, size: BeSizingType.Fit));
             
-            var span = BeControls.GetSpanGrid("300,auto")
-                .AddColumnElementsToNewRow(BeSizingType.Fit, false, (description + ":").GetBeLabelWithShortCut(_lifetime), control);
-            AddControl(span);
+            var grid = BeControls.GetGrid();
+            var label = description.GetBeLabel();
+            grid.AddElement(label);
+            grid.AddElement(control);
+            AddKeyword(description);
             
             return control;
         }
@@ -172,13 +204,56 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             var property = new Property<int>(description);
             OptionsSettingsSmartContext.SetBinding(_lifetime, lambdaExpression, property);
             var control = property.GetBeSpinner(_lifetime, min, max);
-            //AddControl(control.WithDescription(description, _lifetime, size: BeSizingType.Fit));
+            AddControl(control.WithDescription(description, _lifetime, size: BeSizingType.Fit));
             
-            var span = BeControls.GetSpanGrid("300,200")
-                .AddColumnElementsToNewRow(BeSizingType.Fit, false, (description + ":").GetBeLabelWithShortCut(_lifetime), control);
+            var span = BeControls.GetSpanGrid("auto,*")
+                .AddAutoColumnElementsToNewRow(BeSizingType.Fit, false, description.GetBeLabelWithShortCut(_lifetime), control);
             AddControl(span);
+            AddKeyword(description);
             
             return control;
+        }
+        
+        private BeControl AddListControl<TKeyClass>(Expression<Func<TKeyClass, string>> lambdaExpression,
+            string[] defaults, string description)
+        {
+            var property = new Property<string>(description);
+            OptionsSettingsSmartContext.SetBinding(_lifetime, lambdaExpression, property);
+            if (string.IsNullOrEmpty(property.Value))
+            {
+                property.Value = string.Join("\n", defaults);
+            }
+            
+            var model = new StringListViewModel(Lifetime, property);
+
+            var list = model.SelectedEntry.GetBeSingleSelectionListWithToolbar(
+                    model.Entries,
+                    Lifetime,
+                    (entryLt, entry, properties) => new List<BeControl>
+                    {
+                        entry.Value.GetBeTextBox(entryLt)
+                            .WithValidationRule<BeTextBox, string>(
+                                Lifetime,
+                                value => !value.IsEmpty(),
+                                "Value must not be empty.")
+                    },
+                    iconHost: _iconHost,
+                    columnsAndSizes: new[] {"Value,*"},
+                    dock: BeDock.RIGHT)
+                .AddButtonWithListAction(BeListAddAction.ADD, i => model.CreateNewEntry())
+                .AddButtonWithListAction<StringListViewModel.StringListEntry>(BeListAction.REMOVE, i => model.OnEntryRemoved())
+                .AddButtonWithListAction<StringListViewModel.StringListEntry>(BeListAction.MOVE_UP, i => model.OnEntryMoved())
+                .AddButtonWithListAction<StringListViewModel.StringListEntry>(BeListAction.MOVE_DOWN, i => model.OnEntryMoved());
+
+            var grid = BeControls.GetGrid();
+            var label = description.GetBeLabel();
+            grid.AddElement(label);
+            grid.AddElement(list);
+            AddKeyword(description);
+            
+            AddControl(grid.WithMargin(BeMargins.Create(SideMargin, TopMargin, SideMargin)));
+
+            return list;
         }
     }
 }

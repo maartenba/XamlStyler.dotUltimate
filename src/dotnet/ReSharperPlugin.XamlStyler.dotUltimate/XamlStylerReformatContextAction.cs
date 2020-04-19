@@ -41,7 +41,10 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
             // Fetch settings
             var lifetime = solution.GetLifetime();
             var settings = solution.GetSettingsStore().SettingsStore.BindToContextLive(lifetime, ContextRange.Smart(solution.ToDataContext()));
-            var stylerOptions = StylerOptionsFactory.FromSettings(settings);
+            var stylerOptions = StylerOptionsFactory.FromSettings(settings, solution, _dataProvider.Project);
+
+            // Bail out early if needed
+            if (stylerOptions.SuppressProcessing) return null;
             
             // Perform styling
             var styler = new StylerService(stylerOptions);

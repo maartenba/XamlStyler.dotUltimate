@@ -93,7 +93,7 @@ apply plugin: 'com.jetbrains.rdgen'
 rdgen {
     def modelDir = new File(rootDir, "protocol/src/main/kotlin/model")
     def csOutput = new File(rootDir, "src/dotnet/${DotnetPluginId}/Rider")
-    def ktOutput = new File(rootDir, "src/rider/main/kotlin/com/jetbrains/rider/plugins/${RiderPluginId.replace('.','/').toLowerCase()}")
+    def ktOutput = new File(rootDir, "src/rider/main/xavalon/plugins/xamlstyler/dotultimate/${RiderPluginId.replace('.','/').toLowerCase()}")
 
     verbose = true
     classpath "${rdLibDirectory}/rider-model.jar"

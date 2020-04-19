@@ -2,15 +2,15 @@
   <PropertyGroup>
     <SdkVersion>2020.1.0</SdkVersion>
     
-    <Title>XamlStyler.dotUltimate</Title>
-    <Description>Description</Description>
+    <Title>XAML Styler</Title>
+    <Description>XAML Styler is an extension that formats XAML source code based on a set of styling rules. This tool can help you/your team maintain a better XAML coding style as well as a much better XAML readability.</Description>
   
     <Authors>Author</Authors>
-    <Copyright>Copyright $([System.DateTime]::Now.Year) Maintainers of XamlStyler.dotUltimate</Copyright>
-    <PackageTags>resharper plugin</PackageTags>
+    <Copyright>Copyright $([System.DateTime]::Now.Year) Xavalon</Copyright>
+    <PackageTags>resharper rider xaml styler xamlstyler formatting plugin</PackageTags>
   
-    <PackageProjectUrl></PackageProjectUrl>
-    <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageIconUrl></PackageIconUrl>
+    <PackageProjectUrl>https://github.com/Xavalon/XamlStyler</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/Xavalon/XamlStyler/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageIconUrl>https://github.com/Xavalon/XamlStyler/raw/master/XamlStyler.Package/Resources/icon200.jpg</PackageIconUrl>
   </PropertyGroup>
 </Project>

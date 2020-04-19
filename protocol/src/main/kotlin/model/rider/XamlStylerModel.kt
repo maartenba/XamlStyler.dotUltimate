@@ -7,26 +7,10 @@ import com.jetbrains.rd.generator.nova.PredefinedType.*
 @Suppress("unused")
 object XamlStylerModel : Ext(SolutionModel.Solution) {
 
-    val MyEnum = enum {
-        +"FirstValue"
-        +"SecondValue"
-    }
-
-    val MyStructure = structdef {
-        field("projectFile", string)
-        field("target", string)
-    }
-
     init {
         //setting(CSharp50Generator.Namespace, "ReSharperPlugin.XamlStyler.dotUltimate.Rider.Model")
         //setting(Kotlin11Generator.Namespace, "com.jetbrains.rider.xamlstyler.dotultimate.model")
 
         property("myString", string)
-        property("myBool", bool)
-        property("myEnum", MyEnum.nullable)
-
-        map("data", string, string)
-
-        signal("myStructure", MyStructure)
     }
 }
