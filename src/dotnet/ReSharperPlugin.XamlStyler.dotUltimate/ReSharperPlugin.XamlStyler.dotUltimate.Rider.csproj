@@ -16,7 +16,6 @@
 
     <ItemGroup>
         <PackageReference Include="JetBrains.Rider.SDK" Version="$(SdkVersion)" />
-        <PackageReference Include="XamlStyler.Console" Version="3.2003.9" />
     </ItemGroup>
 
     <!-- TODO: uncomment for xaml icons -->

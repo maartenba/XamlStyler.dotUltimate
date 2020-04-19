@@ -19,7 +19,6 @@
         </PackageReference>
         <!-- TODO: https://github.com/NuGet/Home/issues/7154 -->
         <PackageReference Include="Wave" Version="$(WaveVersion)"/>
-        <PackageReference Include="XamlStyler.Console" Version="3.2003.9"/>
     </ItemGroup>
 
     <ItemGroup>
