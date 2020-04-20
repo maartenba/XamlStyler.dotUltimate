@@ -127,7 +127,7 @@ patchPluginXml {
     }.take(1).join('')
 }
 
-buildSearchableOptions.onlyIf { false }
+// buildSearchableOptions.onlyIf { false }
 
 prepareSandbox {
     dependsOn compileDotNet
