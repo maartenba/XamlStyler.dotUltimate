@@ -18,6 +18,7 @@ object XamlStylerModel : Ext(SolutionModel.Solution) {
 
     private val RdXamlStylerFormattingResult = structdef {
         field("isSuccess", bool)
+        field("hasUpdated", bool)
         field("formattedText", string)
     }
 

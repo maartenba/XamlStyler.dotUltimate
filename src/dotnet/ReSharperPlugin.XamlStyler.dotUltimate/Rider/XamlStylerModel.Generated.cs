@@ -68,7 +68,7 @@ namespace JetBrains.Rider.Model
     
     
     
-    protected override long SerializationHash => 5060952217974252596L;
+    protected override long SerializationHash => -3355681540747534071L;
     
     protected override Action<ISerializers> Register => RegisterDeclaredTypesSerializers;
     public static void RegisterDeclaredTypesSerializers(ISerializers serializers)
@@ -212,25 +212,29 @@ namespace JetBrains.Rider.Model
     //fields
     //public fields
     public bool IsSuccess {get; private set;}
+    public bool HasUpdated {get; private set;}
     [NotNull] public string FormattedText {get; private set;}
     
     //private fields
     //primary constructor
     public RdXamlStylerFormattingResult(
       bool isSuccess,
+      bool hasUpdated,
       [NotNull] string formattedText
     )
     {
       if (formattedText == null) throw new ArgumentNullException("formattedText");
       
       IsSuccess = isSuccess;
+      HasUpdated = hasUpdated;
       FormattedText = formattedText;
     }
     //secondary constructor
     //deconstruct trait
-    public void Deconstruct(out bool isSuccess, [NotNull] out string formattedText)
+    public void Deconstruct(out bool isSuccess, out bool hasUpdated, [NotNull] out string formattedText)
     {
       isSuccess = IsSuccess;
+      hasUpdated = HasUpdated;
       formattedText = FormattedText;
     }
     //statics
@@ -238,14 +242,16 @@ namespace JetBrains.Rider.Model
     public static CtxReadDelegate<RdXamlStylerFormattingResult> Read = (ctx, reader) => 
     {
       var isSuccess = reader.ReadBool();
+      var hasUpdated = reader.ReadBool();
       var formattedText = reader.ReadString();
-      var _result = new RdXamlStylerFormattingResult(isSuccess, formattedText);
+      var _result = new RdXamlStylerFormattingResult(isSuccess, hasUpdated, formattedText);
       return _result;
     };
     
     public static CtxWriteDelegate<RdXamlStylerFormattingResult> Write = (ctx, writer, value) => 
     {
       writer.Write(value.IsSuccess);
+      writer.Write(value.HasUpdated);
       writer.Write(value.FormattedText);
     };
     
@@ -265,7 +271,7 @@ namespace JetBrains.Rider.Model
     {
       if (ReferenceEquals(null, other)) return false;
       if (ReferenceEquals(this, other)) return true;
-      return IsSuccess == other.IsSuccess && FormattedText == other.FormattedText;
+      return IsSuccess == other.IsSuccess && HasUpdated == other.HasUpdated && FormattedText == other.FormattedText;
     }
     //hash code trait
     public override int GetHashCode()
@@ -273,6 +279,7 @@ namespace JetBrains.Rider.Model
       unchecked {
         var hash = 0;
         hash = hash * 31 + IsSuccess.GetHashCode();
+        hash = hash * 31 + HasUpdated.GetHashCode();
         hash = hash * 31 + FormattedText.GetHashCode();
         return hash;
       }
@@ -283,6 +290,7 @@ namespace JetBrains.Rider.Model
       printer.Println("RdXamlStylerFormattingResult (");
       using (printer.IndentCookie()) {
         printer.Print("isSuccess = "); IsSuccess.PrintEx(printer); printer.Println();
+        printer.Print("hasUpdated = "); HasUpdated.PrintEx(printer); printer.Println();
         printer.Print("formattedText = "); FormattedText.PrintEx(printer); printer.Println();
       }
       printer.Print(")");

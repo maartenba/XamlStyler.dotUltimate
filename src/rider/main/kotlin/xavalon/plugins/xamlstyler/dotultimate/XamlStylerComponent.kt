@@ -7,6 +7,7 @@ import com.intellij.openapi.editor.Document
 import com.intellij.openapi.fileEditor.FileDocumentManagerListener
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
+import com.jetbrains.rd.util.reactive.adviseOnce
 import com.jetbrains.rdclient.util.idea.ProtocolSubscribedProjectComponent
 import com.jetbrains.rider.ideaInterop.fileTypes.xaml.XamlLanguage
 import com.jetbrains.rider.model.RdXamlStylerFormattingRequest
@@ -37,12 +38,15 @@ class XamlStylerComponent(project: Project)
         val filePath = psiFile.virtualFile.path
         val currentDocumentText = document.text
 
-        val result = model.performReformat.sync(RdXamlStylerFormattingRequest(filePath, currentDocumentText))
-        if (result.isSuccess) {
-            WriteCommandAction.runWriteCommandAction(project) {
-                document.replaceString(0, currentDocumentText.length, result.formattedText)
-            }
-        }
+        model.performReformat.start(componentLifetime, RdXamlStylerFormattingRequest(filePath, currentDocumentText)).result
+                .adviseOnce(componentLifetime) { it ->
+                    val result = it.unwrap()
+                    if (result.isSuccess && result.hasUpdated) {
+                        WriteCommandAction.runWriteCommandAction(project) {
+                            document.replaceString(0, currentDocumentText.length, result.formattedText)
+                        }
+                    }
+                }
     }
 
     override fun dispose() {

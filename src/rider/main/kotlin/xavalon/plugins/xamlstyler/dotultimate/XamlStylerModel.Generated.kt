@@ -31,7 +31,7 @@ class XamlStylerModel private constructor(
         
         
         
-        const val serializationHash = 5060952217974252596L
+        const val serializationHash = -3355681540747534071L
         
     }
     override val serializersOwner: ISerializersOwner get() = XamlStylerModel
@@ -145,6 +145,7 @@ data class RdXamlStylerFormattingRequest (
  */
 data class RdXamlStylerFormattingResult (
     val isSuccess: Boolean,
+    val hasUpdated: Boolean,
     val formattedText: String
 ) : IPrintable {
     //companion
@@ -155,12 +156,14 @@ data class RdXamlStylerFormattingResult (
         @Suppress("UNCHECKED_CAST")
         override fun read(ctx: SerializationCtx, buffer: AbstractBuffer): RdXamlStylerFormattingResult  {
             val isSuccess = buffer.readBool()
+            val hasUpdated = buffer.readBool()
             val formattedText = buffer.readString()
-            return RdXamlStylerFormattingResult(isSuccess, formattedText)
+            return RdXamlStylerFormattingResult(isSuccess, hasUpdated, formattedText)
         }
         
         override fun write(ctx: SerializationCtx, buffer: AbstractBuffer, value: RdXamlStylerFormattingResult)  {
             buffer.writeBool(value.isSuccess)
+            buffer.writeBool(value.hasUpdated)
             buffer.writeString(value.formattedText)
         }
         
@@ -178,6 +181,7 @@ data class RdXamlStylerFormattingResult (
         other as RdXamlStylerFormattingResult
         
         if (isSuccess != other.isSuccess) return false
+        if (hasUpdated != other.hasUpdated) return false
         if (formattedText != other.formattedText) return false
         
         return true
@@ -186,6 +190,7 @@ data class RdXamlStylerFormattingResult (
     override fun hashCode(): Int  {
         var __r = 0
         __r = __r*31 + isSuccess.hashCode()
+        __r = __r*31 + hasUpdated.hashCode()
         __r = __r*31 + formattedText.hashCode()
         return __r
     }
@@ -194,6 +199,7 @@ data class RdXamlStylerFormattingResult (
         printer.println("RdXamlStylerFormattingResult (")
         printer.indent {
             print("isSuccess = "); isSuccess.print(printer); println()
+            print("hasUpdated = "); hasUpdated.print(printer); println()
             print("formattedText = "); formattedText.print(printer); println()
         }
         printer.print(")")

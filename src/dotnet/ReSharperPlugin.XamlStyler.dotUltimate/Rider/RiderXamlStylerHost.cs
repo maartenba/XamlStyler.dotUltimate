@@ -56,12 +56,16 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
                     request.FilePath);
 
                 // Bail out early if needed
-                if (stylerOptions.SuppressProcessing || !stylerOptions.FormatOnSave) return new RdXamlStylerFormattingResult(false, "");
+                if (stylerOptions.SuppressProcessing || !stylerOptions.FormatOnSave) return new RdXamlStylerFormattingResult(false, false, "");
             
                 // Perform styling
                 var styler = new StylerService(stylerOptions);
                 var formattedText = styler.StyleDocument(request.DocumentText).Replace("\r\n", "\n");
-                return new RdXamlStylerFormattingResult(true, formattedText);
+
+                if (request.DocumentText == formattedText) {
+                    return new RdXamlStylerFormattingResult(true, false, "");
+                }
+                return new RdXamlStylerFormattingResult(true, true, formattedText);
             }, requestLifetime).ToRdTask();
         }
     }
