@@ -102,13 +102,15 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
             var xamlFormatter = XamlLanguage.Instance.Formatter<ICodeFormatterImpl>();
             if (xamlFormatter != null)
             {
+                // Note: stylerOptions.UseVisualStudioIndentSize is hardcoded to "True", which means we'll always use IDE settings when in IDE context.
+                // To overcome this, we're ignoring the setting from XamlStyler settings files, and using the configuration in the IDE, so we can toggle this on/off.
                 var schema = Shell.Instance.GetComponent<ISettingsSchema>();
-                if (stylerOptions.UseVisualStudioIndentSize || settings.GetValue((XamlStylerSettings s) => s.UseIdeIndentSize))
+                if (/*stylerOptions.UseVisualStudioIndentSize ||*/ settings.GetValue((XamlStylerSettings s) => s.UseIdeIndentSize))
                 {
                     stylerOptions.IndentSize = (int)xamlFormatter.GetEntry(schema, key => key.INDENT_SIZE).GetDefaultValueInEntryMemberType();
                 }
                 
-                if (stylerOptions.UseVisualStudioIndentWithTabs || settings.GetValue((XamlStylerSettings s) => s.UseIdeIndentWithTabs))
+                if (/*stylerOptions.UseVisualStudioIndentWithTabs ||*/ settings.GetValue((XamlStylerSettings s) => s.UseIdeIndentWithTabs))
                 {
                     var ideIndentStyle = (IndentStyle)xamlFormatter.GetEntry(schema, key => key.INDENT_SIZE).GetDefaultValueInEntryMemberType();
                     stylerOptions.IndentWithTabs = ideIndentStyle == IndentStyle.Tab;
