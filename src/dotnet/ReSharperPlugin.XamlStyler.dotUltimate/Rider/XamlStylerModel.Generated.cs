@@ -36,39 +36,39 @@ namespace JetBrains.Rider.Model
   
   
   /// <summary>
-  /// <p>Generated from: XamlStylerModel.kt:8</p>
+  /// <p>Generated from: XamlStylerModel.kt:12</p>
   /// </summary>
   public class XamlStylerModel : RdExtBase
   {
     //fields
     //public fields
-    [NotNull] public IViewableProperty<string> MyString => _MyString;
+    [NotNull] public IRdEndpoint<RdXamlStylerFormattingRequest, RdXamlStylerFormattingResult> PerformReformat => _PerformReformat;
     
     //private fields
-    [NotNull] private readonly RdProperty<string> _MyString;
+    [NotNull] private readonly RdCall<RdXamlStylerFormattingRequest, RdXamlStylerFormattingResult> _PerformReformat;
     
     //primary constructor
     private XamlStylerModel(
-      [NotNull] RdProperty<string> myString
+      [NotNull] RdCall<RdXamlStylerFormattingRequest, RdXamlStylerFormattingResult> performReformat
     )
     {
-      if (myString == null) throw new ArgumentNullException("myString");
+      if (performReformat == null) throw new ArgumentNullException("performReformat");
       
-      _MyString = myString;
-      _MyString.OptimizeNested = true;
-      BindableChildren.Add(new KeyValuePair<string, object>("myString", _MyString));
+      _PerformReformat = performReformat;
+      _PerformReformat.Async = true;
+      BindableChildren.Add(new KeyValuePair<string, object>("performReformat", _PerformReformat));
     }
     //secondary constructor
     internal XamlStylerModel (
     ) : this (
-      new RdProperty<string>(JetBrains.Rd.Impl.Serializers.ReadString, JetBrains.Rd.Impl.Serializers.WriteString)
+      new RdCall<RdXamlStylerFormattingRequest, RdXamlStylerFormattingResult>(RdXamlStylerFormattingRequest.Read, RdXamlStylerFormattingRequest.Write, RdXamlStylerFormattingResult.Read, RdXamlStylerFormattingResult.Write)
     ) {}
     //deconstruct trait
     //statics
     
     
     
-    protected override long SerializationHash => 5726963228597487203L;
+    protected override long SerializationHash => 5060952217974252596L;
     
     protected override Action<ISerializers> Register => RegisterDeclaredTypesSerializers;
     public static void RegisterDeclaredTypesSerializers(ISerializers serializers)
@@ -89,7 +89,7 @@ namespace JetBrains.Rider.Model
     {
       printer.Println("XamlStylerModel (");
       using (printer.IndentCookie()) {
-        printer.Print("myString = "); _MyString.PrintEx(printer); printer.Println();
+        printer.Print("performReformat = "); _PerformReformat.PrintEx(printer); printer.Println();
       }
       printer.Print(")");
     }
@@ -106,6 +106,193 @@ namespace JetBrains.Rider.Model
     public static XamlStylerModel GetXamlStylerModel(this Solution solution)
     {
       return solution.GetOrCreateExtension("xamlStylerModel", () => new XamlStylerModel());
+    }
+  }
+  
+  
+  /// <summary>
+  /// <p>Generated from: XamlStylerModel.kt:14</p>
+  /// </summary>
+  public sealed class RdXamlStylerFormattingRequest : IPrintable, IEquatable<RdXamlStylerFormattingRequest>
+  {
+    //fields
+    //public fields
+    [NotNull] public string FilePath {get; private set;}
+    [NotNull] public string DocumentText {get; private set;}
+    
+    //private fields
+    //primary constructor
+    public RdXamlStylerFormattingRequest(
+      [NotNull] string filePath,
+      [NotNull] string documentText
+    )
+    {
+      if (filePath == null) throw new ArgumentNullException("filePath");
+      if (documentText == null) throw new ArgumentNullException("documentText");
+      
+      FilePath = filePath;
+      DocumentText = documentText;
+    }
+    //secondary constructor
+    //deconstruct trait
+    public void Deconstruct([NotNull] out string filePath, [NotNull] out string documentText)
+    {
+      filePath = FilePath;
+      documentText = DocumentText;
+    }
+    //statics
+    
+    public static CtxReadDelegate<RdXamlStylerFormattingRequest> Read = (ctx, reader) => 
+    {
+      var filePath = reader.ReadString();
+      var documentText = reader.ReadString();
+      var _result = new RdXamlStylerFormattingRequest(filePath, documentText);
+      return _result;
+    };
+    
+    public static CtxWriteDelegate<RdXamlStylerFormattingRequest> Write = (ctx, writer, value) => 
+    {
+      writer.Write(value.FilePath);
+      writer.Write(value.DocumentText);
+    };
+    
+    //constants
+    
+    //custom body
+    //methods
+    //equals trait
+    public override bool Equals(object obj)
+    {
+      if (ReferenceEquals(null, obj)) return false;
+      if (ReferenceEquals(this, obj)) return true;
+      if (obj.GetType() != GetType()) return false;
+      return Equals((RdXamlStylerFormattingRequest) obj);
+    }
+    public bool Equals(RdXamlStylerFormattingRequest other)
+    {
+      if (ReferenceEquals(null, other)) return false;
+      if (ReferenceEquals(this, other)) return true;
+      return FilePath == other.FilePath && DocumentText == other.DocumentText;
+    }
+    //hash code trait
+    public override int GetHashCode()
+    {
+      unchecked {
+        var hash = 0;
+        hash = hash * 31 + FilePath.GetHashCode();
+        hash = hash * 31 + DocumentText.GetHashCode();
+        return hash;
+      }
+    }
+    //pretty print
+    public void Print(PrettyPrinter printer)
+    {
+      printer.Println("RdXamlStylerFormattingRequest (");
+      using (printer.IndentCookie()) {
+        printer.Print("filePath = "); FilePath.PrintEx(printer); printer.Println();
+        printer.Print("documentText = "); DocumentText.PrintEx(printer); printer.Println();
+      }
+      printer.Print(")");
+    }
+    //toString
+    public override string ToString()
+    {
+      var printer = new SingleLinePrettyPrinter();
+      Print(printer);
+      return printer.ToString();
+    }
+  }
+  
+  
+  /// <summary>
+  /// <p>Generated from: XamlStylerModel.kt:19</p>
+  /// </summary>
+  public sealed class RdXamlStylerFormattingResult : IPrintable, IEquatable<RdXamlStylerFormattingResult>
+  {
+    //fields
+    //public fields
+    public bool IsSuccess {get; private set;}
+    [NotNull] public string FormattedText {get; private set;}
+    
+    //private fields
+    //primary constructor
+    public RdXamlStylerFormattingResult(
+      bool isSuccess,
+      [NotNull] string formattedText
+    )
+    {
+      if (formattedText == null) throw new ArgumentNullException("formattedText");
+      
+      IsSuccess = isSuccess;
+      FormattedText = formattedText;
+    }
+    //secondary constructor
+    //deconstruct trait
+    public void Deconstruct(out bool isSuccess, [NotNull] out string formattedText)
+    {
+      isSuccess = IsSuccess;
+      formattedText = FormattedText;
+    }
+    //statics
+    
+    public static CtxReadDelegate<RdXamlStylerFormattingResult> Read = (ctx, reader) => 
+    {
+      var isSuccess = reader.ReadBool();
+      var formattedText = reader.ReadString();
+      var _result = new RdXamlStylerFormattingResult(isSuccess, formattedText);
+      return _result;
+    };
+    
+    public static CtxWriteDelegate<RdXamlStylerFormattingResult> Write = (ctx, writer, value) => 
+    {
+      writer.Write(value.IsSuccess);
+      writer.Write(value.FormattedText);
+    };
+    
+    //constants
+    
+    //custom body
+    //methods
+    //equals trait
+    public override bool Equals(object obj)
+    {
+      if (ReferenceEquals(null, obj)) return false;
+      if (ReferenceEquals(this, obj)) return true;
+      if (obj.GetType() != GetType()) return false;
+      return Equals((RdXamlStylerFormattingResult) obj);
+    }
+    public bool Equals(RdXamlStylerFormattingResult other)
+    {
+      if (ReferenceEquals(null, other)) return false;
+      if (ReferenceEquals(this, other)) return true;
+      return IsSuccess == other.IsSuccess && FormattedText == other.FormattedText;
+    }
+    //hash code trait
+    public override int GetHashCode()
+    {
+      unchecked {
+        var hash = 0;
+        hash = hash * 31 + IsSuccess.GetHashCode();
+        hash = hash * 31 + FormattedText.GetHashCode();
+        return hash;
+      }
+    }
+    //pretty print
+    public void Print(PrettyPrinter printer)
+    {
+      printer.Println("RdXamlStylerFormattingResult (");
+      using (printer.IndentCookie()) {
+        printer.Print("isSuccess = "); IsSuccess.PrintEx(printer); printer.Println();
+        printer.Print("formattedText = "); FormattedText.PrintEx(printer); printer.Println();
+      }
+      printer.Print(")");
+    }
+    //toString
+    public override string ToString()
+    {
+      var printer = new SingleLinePrettyPrinter();
+      Print(printer);
+      return printer.ToString();
     }
   }
 }

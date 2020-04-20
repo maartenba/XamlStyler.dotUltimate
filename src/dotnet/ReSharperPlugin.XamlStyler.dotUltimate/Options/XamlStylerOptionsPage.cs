@@ -128,7 +128,7 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
 #if RIDER
             AddBoolOption((XamlStylerSettings x) => x.FormatOnSave, "Format XAML on save");
 #endif
-            AddBoolOption((XamlStylerSettings x) => x.SaveAndCloseOnFormat, "Automatically save and close documents opened by XAML Styler");
+            //AddBoolOption((XamlStylerSettings x) => x.SaveAndCloseOnFormat, "Automatically save and close documents opened by XAML Styler");
             AddSpinner((XamlStylerSettings x) => x.CommentSpaces, "Comment padding:");
             
             // Configuration

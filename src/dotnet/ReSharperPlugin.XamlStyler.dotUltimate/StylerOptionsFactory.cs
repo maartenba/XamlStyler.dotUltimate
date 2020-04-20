@@ -21,6 +21,19 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
             [CanBeNull] IProject project,
             [CanBeNull] IPsiSourceFileWithLocation psiSourceFileWithLocation)
         {
+            return FromSettings(
+                settings: settings,
+                solution: solution, 
+                projectPath: project?.ProjectFileLocation?.FullPath, 
+                sourceFilePath: psiSourceFileWithLocation?.Location?.FullPath);
+        }
+        
+         public static IStylerOptions FromSettings(
+            IContextBoundSettingsStoreLive settings,
+            [CanBeNull] ISolution solution,
+            [CanBeNull] string projectPath,
+            [CanBeNull] string sourceFilePath)
+        {
             // 1. Load global settings
             IStylerOptions fallbackOptions = new StylerOptions();
             IStylerOptions stylerOptions = new StylerOptions();
@@ -65,7 +78,7 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
             stylerOptions.SuppressProcessing = settings.GetValue((XamlStylerSettings s) => s.SuppressProcessing);
             
             // 2. Try finding settings in our project/solution?
-            if (project != null || psiSourceFileWithLocation != null)
+            if (!string.IsNullOrEmpty(projectPath) || !string.IsNullOrEmpty(sourceFilePath))
             {
                 var searchToDriveRoot = settings.GetValue((XamlStylerSettings s) => s.SearchToDriveRoot);
                 
@@ -73,11 +86,11 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
                     ? (searchToDriveRoot ? Path.GetPathRoot(solution.SolutionFilePath.FullPath) : Path.GetDirectoryName(solution.SolutionFilePath.FullPath))
                     : string.Empty;
 
-                var itemPath = psiSourceFileWithLocation?.Location?.FullPath;
+                var itemPath = sourceFilePath;
                 
                 var configPath = (!string.IsNullOrEmpty(itemPath) && itemPath.StartsWith(highestRootPath, StringComparison.OrdinalIgnoreCase))
                     ? GetConfigPathForProject(highestRootPath, itemPath)
-                    : GetConfigPathForProject(project?.ProjectFileLocation?.FullPath ?? itemPath, itemPath);
+                    : GetConfigPathForProject(projectPath ?? itemPath, itemPath);
                 if (!string.IsNullOrEmpty(configPath))
                 {
                     stylerOptions = ((StylerOptions)stylerOptions).Clone();

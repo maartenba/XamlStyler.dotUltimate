@@ -17,6 +17,12 @@
                              instance="xavalon.plugins.xamlstyler.dotultimate.XamlStylerOptionsPage" />
   </extensions>
 
+  <project-components>
+    <component>
+      <implementation-class>xavalon.plugins.xamlstyler.dotultimate.XamlStylerComponent</implementation-class>
+    </component>
+  </project-components>
+
   <actions>
     <action id="XamlStyler.Reformat"
             text="Format with XAML Styler"
