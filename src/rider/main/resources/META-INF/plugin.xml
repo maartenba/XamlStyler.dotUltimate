@@ -13,8 +13,7 @@
   </description>
 
   <extensions defaultExtensionNs="com.intellij">
-    <applicationConfigurable id="XamlStylerOptionsPage"
-                             groupId="tools"
+    <applicationConfigurable groupId="tools"
                              instance="xavalon.plugins.xamlstyler.dotultimate.XamlStylerOptionsPage" />
   </extensions>
 

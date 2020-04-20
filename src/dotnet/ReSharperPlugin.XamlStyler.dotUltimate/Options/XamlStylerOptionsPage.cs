@@ -6,7 +6,6 @@ using JetBrains.Application.Settings;
 using JetBrains.Application.UI.Controls.FileSystem;
 using JetBrains.Application.UI.Options;
 using JetBrains.Application.UI.Options.OptionPages;
-using JetBrains.Application.UI.Options.Options.ThemedIcons;
 using JetBrains.Application.UI.Options.OptionsDialog;
 using JetBrains.Application.UI.Options.OptionsDialog.SimpleOptions;
 using JetBrains.DataFlow;
@@ -16,19 +15,19 @@ using JetBrains.IDE.UI.Extensions.Properties;
 using JetBrains.IDE.UI.Extensions.Validation;
 using JetBrains.IDE.UI.Options;
 using JetBrains.Lifetimes;
+using JetBrains.ReSharper.Feature.Services.Resources;
 using JetBrains.Rider.Model.UIAutomation;
 using JetBrains.Util;
 using Xavalon.XamlStyler.Core.Options;
 
 namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
 {
-    [OptionsPage(Id, PageTitle, typeof(OptionsThemedIcons.EnvironmentGeneral), ParentId = ToolsPage.PID)]
+    [OptionsPage(PID, PageTitle, typeof(FeaturesEnvironmentOptionsThemedIcons.FormattingStyle), ParentId = ToolsPage.PID)]
     public class XamlStylerOptionsPage : BeSimpleOptionsPage
     {
-        private const string Id = nameof(XamlStylerOptionsPage);
+        private const string PID = nameof(XamlStylerOptionsPage);
         private const string PageTitle = "XAML Styler";
 
-        private readonly Lifetime _lifetime;
         private readonly IconHostBase _iconHost;
         
         public XamlStylerOptionsPage(
@@ -39,7 +38,6 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             [NotNull] ICommonFileDialogs commonFileDialogs)
             : base(lifetime, optionsPageContext, optionsSettingsSmartContext)
         {
-            _lifetime = lifetime;
             _iconHost = iconHost;
             
             // Indentation
@@ -127,7 +125,9 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
 
             // Misc
             AddHeader("Misc");
+#if RIDER
             AddBoolOption((XamlStylerSettings x) => x.FormatOnSave, "Format XAML on save");
+#endif
             AddBoolOption((XamlStylerSettings x) => x.SaveAndCloseOnFormat, "Automatically save and close documents opened by XAML Styler");
             AddSpinner((XamlStylerSettings x) => x.CommentSpaces, "Comment padding:");
             
@@ -185,9 +185,12 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             string description)
         {
             var property = new Property<string>(description);
-            OptionsSettingsSmartContext.SetBinding(_lifetime, lambdaExpression, property);
-            var control = property.GetBeTextBox(_lifetime);
-            AddControl(control.WithDescription(description, _lifetime, size: BeSizingType.Fill));
+            OptionsSettingsSmartContext.SetBinding(Lifetime, lambdaExpression, property);
+            var control = property.GetBeTextBox(Lifetime);
+            AddKeyword(description);
+            AddControl(control
+                .WithMaxSize(BeControlSizes.GetSize(BeControlSizeType.LARGE, BeControlSizeType.FIT_TO_CONTENT))
+                .WithDescription(description, Lifetime, size: BeSizingType.Fill));
             
             return control;
         }
@@ -196,9 +199,11 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             string description, int min = int.MinValue, int max = int.MaxValue)
         {
             var property = new Property<int>(description);
-            OptionsSettingsSmartContext.SetBinding(_lifetime, lambdaExpression, property);
-            var control = property.GetBeSpinner(_lifetime, min, max);
-            AddControl(control.WithDescription(description, _lifetime, size: BeSizingType.Fit));
+            OptionsSettingsSmartContext.SetBinding(Lifetime, lambdaExpression, property);
+            var control = property.GetBeSpinner(Lifetime, min, max);
+            AddKeyword(description);
+            AddControl(control
+                .WithDescription(description, Lifetime, size: BeSizingType.Fit));
             
             return control;
         }
@@ -207,7 +212,7 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             string[] defaults, string description)
         {
             var property = new Property<string>(description);
-            OptionsSettingsSmartContext.SetBinding(_lifetime, lambdaExpression, property);
+            OptionsSettingsSmartContext.SetBinding(Lifetime, lambdaExpression, property);
             if (string.IsNullOrEmpty(property.Value))
             {
                 property.Value = string.Join("\n", defaults);

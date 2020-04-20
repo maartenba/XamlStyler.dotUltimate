@@ -2,14 +2,14 @@ using System;
 using JetBrains.Annotations;
 using JetBrains.Application.Progress;
 using JetBrains.Application.Settings;
-using JetBrains.DocumentModel;
 using JetBrains.DocumentModel.Impl;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.DataContext;
-using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.ReSharper.Feature.Services.ContextActions;
 using JetBrains.ReSharper.Feature.Services.Xaml.Bulbs;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Files;
+using JetBrains.ReSharper.Psi.Xaml;
 using JetBrains.TextControl;
 using JetBrains.Util;
 using Xavalon.XamlStyler.Core;
@@ -53,10 +53,22 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
             
             // Perform styling
             var styler = new StylerService(stylerOptions);
-            _dataProvider.Document.SetText(
-                styler.StyleDocument(_dataProvider.Document.GetText()).Replace("\r\n", "\n"));
 
-            return BulbActionUtils.SetCaret(new DocumentOffset(_dataProvider.Document, 0));
+            foreach (var prjItem in _dataProvider.Document.GetPsiSourceFiles(solution))
+            {
+                foreach (var file in prjItem.GetPsiFiles<XamlLanguage>())
+                {
+                    var sourceFile = file.GetSourceFile();
+                    if (sourceFile?.Document != null)
+                    {
+                        var oldText = sourceFile.Document.GetText();
+                        var newText = styler.StyleDocument(oldText).Replace("\r\n", "\n");
+                        file.ReParse(new TreeTextRange(new TreeOffset(0), new TreeOffset(oldText.Length)), newText);
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }
