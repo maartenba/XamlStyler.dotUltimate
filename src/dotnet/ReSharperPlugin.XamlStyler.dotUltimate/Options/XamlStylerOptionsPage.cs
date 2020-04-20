@@ -139,46 +139,6 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             AddFileChooserOption(configPath, "External configuration file", FileSystemPath.Empty, null, commonFileDialogs, null, false, "", null, null, null, null);
             AddBoolOption((XamlStylerSettings x) => x.SearchToDriveRoot, "Search to drive root");
             AddBoolOption((XamlStylerSettings x) => x.SuppressProcessing, "Suppress processing");
-
-            AddButton("Reset to defaults", () =>
-            {
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.IndentSize);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.UseIdeIndentSize);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.IndentWithTabs);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.UseIdeIndentWithTabs);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.AttributesTolerance);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.KeepFirstAttributeOnSameLine);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.MaxAttributeCharactersPerLine);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.MaxAttributeCharactersPerLine);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.MaxAttributesPerLine);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.NoNewLineElements);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.PutAttributeOrderRuleGroupsOnSeparateLines);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.AttributeIndentation);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.AttributeIndentationStyle);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.RemoveDesignTimeReferences);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.EnableAttributeReordering);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.AttributeOrderingRuleGroups);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.FirstLineAttributes);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.OrderAttributesByName);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.PutEndingBracketOnNewLine);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.RemoveEndingTagOfEmptyElement);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.SpaceBeforeClosingSlash);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.RootElementLineBreakRule);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.ReorderVSM);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.ReorderGridChildren);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.ReorderCanvasChildren);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.ReorderSetters);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.FormatMarkupExtension);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.NoNewLineMarkupExtensions);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.ThicknessStyle);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.ThicknessAttributes);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.FormatOnSave);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.SaveAndCloseOnFormat);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.CommentSpaces);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.ConfigPath);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.SearchToDriveRoot);
-                optionsSettingsSmartContext.ResetValue((XamlStylerSettings x) => x.SuppressProcessing);
-            });
         }
 
         private BeTextBox AddTextBox<TKeyClass>(Expression<Func<TKeyClass, string>> lambdaExpression,

@@ -128,11 +128,9 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
 
         #region Misc
 
-        // TODO MAARTEN WATCHER
         [SettingsEntry(DefaultValue: true, Description: "Defines whether to automatically format the active XAML document while saving.\nDefault Value: true")]
         public bool FormatOnSave { get; set; }
 
-        // TODO MAARTEN WATCHER
         [SettingsEntry(DefaultValue: true, Description: "When set to true, XAML Styler will automatically save and close any files it opened when formatting.\nDefault Value: true")]
         public bool SaveAndCloseOnFormat { get; set; }
 
