@@ -18,16 +18,15 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
         public static IStylerOptions FromSettings(
             IContextBoundSettingsStoreLive settings,
             [CanBeNull] ISolution solution,
-            [CanBeNull] IProject project)
+            [CanBeNull] IProject project,
+            [CanBeNull] IPsiSourceFileWithLocation psiSourceFileWithLocation)
         {
             // 1. Load global settings
             IStylerOptions fallbackOptions = new StylerOptions();
             IStylerOptions stylerOptions = new StylerOptions();
             
             stylerOptions.IndentSize = settings.GetValue((XamlStylerSettings s) => s.IndentSize);
-            //stylerOptions.UseVisualStudioIndentSize = settings.GetValue((XamlStylerSettings s) => s.UseIdeIndentSize);
             stylerOptions.IndentWithTabs = settings.GetValue((XamlStylerSettings s) => s.IndentWithTabs);
-            //stylerOptions.UseVisualStudioIndentWithTabs = settings.GetValue((XamlStylerSettings s) => s.UseIdeIndentWithTabs);
             
             stylerOptions.AttributesTolerance = settings.GetValue((XamlStylerSettings s) => s.AttributesTolerance);
             stylerOptions.KeepFirstAttributeOnSameLine = settings.GetValue((XamlStylerSettings s) => s.KeepFirstAttributeOnSameLine);
@@ -66,15 +65,19 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
             stylerOptions.SuppressProcessing = settings.GetValue((XamlStylerSettings s) => s.SuppressProcessing);
             
             // 2. Try finding settings in our project/solution?
-            if (project != null)
+            if (project != null || psiSourceFileWithLocation != null)
             {
                 var searchToDriveRoot = settings.GetValue((XamlStylerSettings s) => s.SearchToDriveRoot);
                 
                 var highestRootPath = solution != null && !solution.IsTemporary
                     ? (searchToDriveRoot ? Path.GetPathRoot(solution.SolutionFilePath.FullPath) : Path.GetDirectoryName(solution.SolutionFilePath.FullPath))
                     : string.Empty;
+
+                var itemPath = psiSourceFileWithLocation?.Location?.FullPath;
                 
-                var configPath = GetConfigPathForProject(highestRootPath, project);
+                var configPath = (!string.IsNullOrEmpty(itemPath) && itemPath.StartsWith(highestRootPath, StringComparison.OrdinalIgnoreCase))
+                    ? GetConfigPathForProject(highestRootPath, itemPath)
+                    : GetConfigPathForProject(project?.ProjectFileLocation?.FullPath ?? itemPath, itemPath);
                 if (!string.IsNullOrEmpty(configPath))
                 {
                     stylerOptions = ((StylerOptions)stylerOptions).Clone();
@@ -102,9 +105,14 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
             return stylerOptions;
         }
         
-        private static string GetConfigPathForProject(string highestRootPath, IProject project)
+        private static string GetConfigPathForProject(string highestRootPath, string path)
         {
-            var currentDirectory = project?.ProjectFileLocation?.Parent.FullPath;
+            if (path.IsNullOrEmpty())
+            {
+                return null;
+            }
+            
+            var currentDirectory = Path.GetDirectoryName(path);
             while (currentDirectory?.StartsWith(highestRootPath, StringComparison.InvariantCultureIgnoreCase) ?? false)
             {
                 var configurationFilePath = Path.Combine(currentDirectory, "Settings.XamlStyler");
