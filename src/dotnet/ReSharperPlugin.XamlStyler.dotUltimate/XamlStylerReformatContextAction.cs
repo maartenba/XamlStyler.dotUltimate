@@ -74,7 +74,7 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
             return new[]
             {
                 Create(_text, _actionAppliesTo, subAnchor3),
-                Create("Format file", XamlStylerActionAppliesTo.File, subAnchor3),
+                Create("Format XAML file", XamlStylerActionAppliesTo.File, subAnchor3),
                 Create("Format XAML files in project", XamlStylerActionAppliesTo.Project, subAnchor3),
                 Create("Format XAML files in solution", XamlStylerActionAppliesTo.Solution, subAnchor3)
             };
