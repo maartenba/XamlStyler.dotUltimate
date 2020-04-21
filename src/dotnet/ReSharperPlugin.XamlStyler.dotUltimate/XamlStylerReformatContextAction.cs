@@ -20,13 +20,6 @@ using Xavalon.XamlStyler.Core;
 
 namespace ReSharperPlugin.XamlStyler.dotUltimate
 {
-    public enum XamlStylerActionAppliesTo
-    {
-        File,
-        Project,
-        Solution
-    }
-    
     [ContextAction(
         Name = "XamlStyler.Reformat",
         Description = "Formats the document(s) using XAML Styler.",
@@ -37,17 +30,17 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
     {
         [NotNull] private readonly XamlContextActionDataProvider _dataProvider;
         [NotNull] private readonly string _text;
-        private readonly XamlStylerActionAppliesTo _actionAppliesTo;
+        private readonly ActionAppliesTo _actionAppliesTo;
 
         public XamlStylerReformatContextAction([NotNull] XamlContextActionDataProvider dataProvider)
-            : this(dataProvider, "Format with XAML Styler", XamlStylerActionAppliesTo.File)
+            : this(dataProvider, "Format with XAML Styler", ActionAppliesTo.File)
         {
         }
         
         private XamlStylerReformatContextAction(
             [NotNull] XamlContextActionDataProvider dataProvider, 
             [NotNull] string text,
-            XamlStylerActionAppliesTo actionAppliesTo)
+            ActionAppliesTo actionAppliesTo)
         {
             _dataProvider = dataProvider ?? throw new ArgumentNullException(nameof(dataProvider));
             _text = text ?? throw new ArgumentNullException(nameof(text));
@@ -65,7 +58,7 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
             var subAnchor2 = new InvisibleAnchor(mainAnchor);
             var subAnchor3 = subAnchor2.CreateNext(separate: true);
 
-            IntentionAction Create(string text, XamlStylerActionAppliesTo appliesTo, IAnchor anchor)
+            IntentionAction Create(string text, ActionAppliesTo appliesTo, IAnchor anchor)
             {
                 return new XamlStylerReformatContextAction(_dataProvider, text, appliesTo)
                     .ToContextActionIntention(anchor, null);
@@ -74,9 +67,9 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
             return new[]
             {
                 Create(_text, _actionAppliesTo, subAnchor3),
-                Create("Format XAML file", XamlStylerActionAppliesTo.File, subAnchor3),
-                Create("Format XAML files in project", XamlStylerActionAppliesTo.Project, subAnchor3),
-                Create("Format XAML files in solution", XamlStylerActionAppliesTo.Solution, subAnchor3)
+                Create("Format XAML file", ActionAppliesTo.File, subAnchor3),
+                Create("Format XAML files in project", ActionAppliesTo.Project, subAnchor3),
+                Create("Format XAML files in solution", ActionAppliesTo.Solution, subAnchor3)
             };
         } 
 
@@ -91,7 +84,10 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
                 settings,
                 solution, 
                 _dataProvider.Project,
-                _dataProvider.SourceFile as IPsiSourceFileWithLocation);
+                _actionAppliesTo == ActionAppliesTo.File 
+                    ? _dataProvider.SourceFile as IPsiSourceFileWithLocation // Traverse config chain from file path
+                    : null  // Traverse config chain from project path
+            );
 
             // Bail out early if needed
             if (stylerOptions.SuppressProcessing) return null;
@@ -100,8 +96,8 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
             var styler = new StylerService(stylerOptions);
             
             var psiSourceFiles = 
-                _actionAppliesTo == XamlStylerActionAppliesTo.File ? _dataProvider.Document.GetPsiSourceFiles(solution).AsIReadOnlyList()
-                    : _actionAppliesTo == XamlStylerActionAppliesTo.Project ? _dataProvider.Project.GetAllProjectFiles(it => it.LanguageType.Is<XamlProjectFileType>()).SelectMany(file => file.ToSourceFiles().AsIReadOnlyList())
+                _actionAppliesTo == ActionAppliesTo.File ? _dataProvider.Document.GetPsiSourceFiles(solution).AsIReadOnlyList()
+                    : _actionAppliesTo == ActionAppliesTo.Project ? _dataProvider.Project.GetAllProjectFiles(it => it.LanguageType.Is<XamlProjectFileType>()).SelectMany(file => file.ToSourceFiles().AsIReadOnlyList())
                         : _dataProvider.Solution.GetAllProjects().SelectMany(project => project.GetAllProjectFiles(it => it.LanguageType.Is<XamlProjectFileType>()).SelectMany(file => file.ToSourceFiles().AsIReadOnlyList()));
 
             foreach (var prjItem in psiSourceFiles)
@@ -119,6 +115,13 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
             }
 
             return null;
+        }
+
+        private enum ActionAppliesTo
+        {
+            File,
+            Project,
+            Solution
         }
     }
 }
