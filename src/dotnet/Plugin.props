@@ -7,7 +7,7 @@
   
     <Authors>Author</Authors>
     <Copyright>Copyright $([System.DateTime]::Now.Year) Xavalon</Copyright>
-    <PackageTags>resharper rider xaml styler xamlstyler formatting plugin</PackageTags>
+    <PackageTags>resharper rider xaml styler xamlstyler formatting formatter format plugin style uwp wpf</PackageTags>
   
     <PackageProjectUrl>https://github.com/Xavalon/XamlStyler</PackageProjectUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/Xavalon/XamlStyler/master/LICENSE.txt</PackageLicenseUrl>

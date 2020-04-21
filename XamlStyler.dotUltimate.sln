@@ -11,6 +11,8 @@ ProjectSection(SolutionItems) = preProject
 	src\dotnet\Directory.Build.props = src\dotnet\Directory.Build.props
 	src\dotnet\Plugin.props = src\dotnet\Plugin.props
 	src\rider\main\resources\META-INF\plugin.xml = src\rider\main\resources\META-INF\plugin.xml
+	CHANGELOG.md = CHANGELOG.md
+	README.md = README.md
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamlStyler.Core", "src\dotnet\XamlStyler\XamlStyler.Core\XamlStyler.Core.csproj", "{57B289A3-1931-46CC-AE4F-97E05DB8E717}"
