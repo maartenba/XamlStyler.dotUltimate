@@ -25,7 +25,7 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
                 settings: settings,
                 solution: solution, 
                 projectPath: project?.ProjectFileLocation?.FullPath, 
-                sourceFilePath: psiSourceFileWithLocation?.Location?.FullPath);
+                sourceFilePath: psiSourceFileWithLocation?.Location.FullPath);
         }
         
          public static IStylerOptions FromSettings(
@@ -71,7 +71,6 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
             stylerOptions.ThicknessStyle = settings.GetValue((XamlStylerSettings s) => s.ThicknessStyle);
             stylerOptions.ThicknessAttributes = settings.GetValue((XamlStylerSettings s) => s.ThicknessAttributes);
             stylerOptions.FormatOnSave = settings.GetValue((XamlStylerSettings s) => s.FormatOnSave);
-            stylerOptions.SaveAndCloseOnFormat = settings.GetValue((XamlStylerSettings s) => s.SaveAndCloseOnFormat);
             stylerOptions.CommentSpaces = settings.GetValue((XamlStylerSettings s) => s.CommentSpaces);
             stylerOptions.ConfigPath = settings.GetValue((XamlStylerSettings s) => s.ConfigPath)?.FullPath;
             stylerOptions.SearchToDriveRoot = settings.GetValue((XamlStylerSettings s) => s.SearchToDriveRoot);

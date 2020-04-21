@@ -131,9 +131,6 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate
         [SettingsEntry(DefaultValue: true, Description: "Defines whether to automatically format the active XAML document while saving.\nDefault Value: true")]
         public bool FormatOnSave { get; set; }
 
-        [SettingsEntry(DefaultValue: true, Description: "When set to true, XAML Styler will automatically save and close any files it opened when formatting.\nDefault Value: true")]
-        public bool SaveAndCloseOnFormat { get; set; }
-
         [SettingsEntry(DefaultValue: 2, Description: "Determines the number of spaces a XAML comment should be padded with.\nDefault Value: 2")]
         public int CommentSpaces { get; set; }
 

@@ -40,6 +40,12 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
         {
             _iconHost = iconHost;
             
+#if RIDER
+            // General
+            AddHeader("General");
+            AddBoolOption((XamlStylerSettings x) => x.FormatOnSave, "Format XAML on save");
+#endif
+
             // Indentation
             AddHeader("Indentation");
             var indentSizeOption = AddSpinner((XamlStylerSettings x) => x.IndentSize, "Indent size:");
@@ -125,10 +131,6 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
 
             // Misc
             AddHeader("Misc");
-#if RIDER
-            AddBoolOption((XamlStylerSettings x) => x.FormatOnSave, "Format XAML on save");
-#endif
-            //AddBoolOption((XamlStylerSettings x) => x.SaveAndCloseOnFormat, "Automatically save and close documents opened by XAML Styler");
             AddSpinner((XamlStylerSettings x) => x.CommentSpaces, "Comment padding:");
             
             // Configuration
