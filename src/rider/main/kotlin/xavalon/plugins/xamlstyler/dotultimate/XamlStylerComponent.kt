@@ -27,6 +27,9 @@ class XamlStylerComponent(project: Project)
 
     init {
 
+        // In Rider, documents are saved in the front-end. Since we run XAML Styler in the R# backend,
+        // we'll need to subscribe to document sync events and piper the document through the backend
+        // before save.
         messageBus.subscribe(AppTopics.FILE_DOCUMENT_SYNC, this)
     }
 
@@ -38,9 +41,12 @@ class XamlStylerComponent(project: Project)
         val filePath = psiFile.virtualFile.path
         val currentDocumentText = document.text
 
+        // Perform reformat on back-end, asynchronously
         model.performReformat.start(componentLifetime, RdXamlStylerFormattingRequest(filePath, currentDocumentText)).result
                 .adviseOnce(componentLifetime) { it ->
                     val result = it.unwrap()
+
+                    // Only update if backend actually made modifications
                     if (result.isSuccess && result.hasUpdated) {
                         WriteCommandAction.runWriteCommandAction(project) {
                             document.replaceString(0, currentDocumentText.length, result.formattedText)
