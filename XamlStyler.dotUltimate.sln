@@ -15,10 +15,6 @@ ProjectSection(SolutionItems) = preProject
 	README.md = README.md
 EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamlStyler.Core", "src\dotnet\XamlStyler\XamlStyler.Core\XamlStyler.Core.csproj", "{57B289A3-1931-46CC-AE4F-97E05DB8E717}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XamlStyler", "XamlStyler", "{EF5B167A-665B-4329-B485-D9E0932155D9}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,12 +33,7 @@ Global
 		{640FD32F-01A9-4C3E-A75F-7B8BF0342A11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{640FD32F-01A9-4C3E-A75F-7B8BF0342A11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{640FD32F-01A9-4C3E-A75F-7B8BF0342A11}.Release|Any CPU.Build.0 = Release|Any CPU
-		{57B289A3-1931-46CC-AE4F-97E05DB8E717}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{57B289A3-1931-46CC-AE4F-97E05DB8E717}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{57B289A3-1931-46CC-AE4F-97E05DB8E717}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{57B289A3-1931-46CC-AE4F-97E05DB8E717}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{57B289A3-1931-46CC-AE4F-97E05DB8E717} = {EF5B167A-665B-4329-B485-D9E0932155D9}
 	EndGlobalSection
 EndGlobal
