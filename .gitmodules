@@ -1,4 +1,0 @@
-[submodule "src/dotnet/XamlStyler"]
-	path = src/dotnet/XamlStyler
-	url = https://github.com/Xavalon/XamlStyler.git
-	branch = master
