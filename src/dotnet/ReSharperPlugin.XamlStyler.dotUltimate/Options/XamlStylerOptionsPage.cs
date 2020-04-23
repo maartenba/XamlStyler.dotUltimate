@@ -77,7 +77,7 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             AddTextBox((XamlStylerSettings x) => x.NoNewLineElements, "Newline exemption elements:");
             AddBoolOption((XamlStylerSettings x) => x.PutAttributeOrderRuleGroupsOnSeparateLines, "Separate by groups");
             AddSpinner((XamlStylerSettings x) => x.AttributeIndentation, "Attribute indentation:");
-            AddComboEnum((XamlStylerSettings x) => x.AttributeIndentationStyle, "Attribute indentation style");
+            AddComboEnum((XamlStylerSettings x) => x.AttributeIndentationStyle, "Attribute indentation style:");
             AddBoolOption((XamlStylerSettings x) => x.RemoveDesignTimeReferences, "Remove design-time references");
             
             // Attribute Reordering
@@ -106,14 +106,14 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             AddBoolOption((XamlStylerSettings x) => x.PutEndingBracketOnNewLine, "Put ending brackets on new line");
             AddBoolOption((XamlStylerSettings x) => x.RemoveEndingTagOfEmptyElement, "Remove ending tag of empty element");
             AddBoolOption((XamlStylerSettings x) => x.SpaceBeforeClosingSlash, "Space before ending slash in self-closing elements");
-            AddComboEnum((XamlStylerSettings x) => x.RootElementLineBreakRule, "Root element line breaks between attributes");
+            AddComboEnum((XamlStylerSettings x) => x.RootElementLineBreakRule, "Root element line breaks between attributes:");
             
             // Element reordering
             AddHeader("Element reordering");
-            AddComboEnum((XamlStylerSettings x) => x.ReorderVSM, "Reorder visual state manager");
+            AddComboEnum((XamlStylerSettings x) => x.ReorderVSM, "Reorder visual state manager:");
             AddBoolOption((XamlStylerSettings x) => x.ReorderGridChildren, "Reorder grid panel children");
             AddBoolOption((XamlStylerSettings x) => x.ReorderCanvasChildren, "Reorder canvas panel children");
-            AddComboEnum((XamlStylerSettings x) => x.ReorderSetters, "Reorder setters");
+            AddComboEnum((XamlStylerSettings x) => x.ReorderSetters, "Reorder setters:");
 
             // Markup extension
             AddHeader("Markup extension");
@@ -126,7 +126,7 @@ namespace ReSharperPlugin.XamlStyler.dotUltimate.Options
             
             // Thickness formatting
             AddHeader("Thickness formatting");
-            AddComboEnum((XamlStylerSettings x) => x.ThicknessStyle, "Thickness separator");
+            AddComboEnum((XamlStylerSettings x) => x.ThicknessStyle, "Thickness separator:");
             AddTextBox((XamlStylerSettings x) => x.ThicknessAttributes, "Thickness attributes:");
 
             // Misc
